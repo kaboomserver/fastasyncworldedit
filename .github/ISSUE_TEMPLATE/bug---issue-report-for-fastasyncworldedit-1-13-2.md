@@ -1,5 +1,5 @@
 ---
-name: Bug / Issue report for FastAsyncWorldEdit 1.13.2
+name: Bug / Issue report for FastAsyncWorldEdit v1.13.2 and higher
 about: Bug / Issue report about this plugin
 title: ''
 labels: Requires Testing
