@@ -33,6 +33,7 @@ import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.regions.Region;
 import java.util.Iterator;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 /**
  * Utility class to apply region functions to {@link com.sk89q.worldedit.regions.Region}.
@@ -86,14 +87,14 @@ public class RegionVisitor implements Operation {
             Stopping the iteration only on an exception is stupid and can result in crashes. It
             should have never been considered. --MattBDev 2019-09-08
              */
-
-            Iterator<? extends BlockVector3> trailingIterator = iterable.iterator();
-            Iterator<? extends BlockVector3> leadingIterator = iterable.iterator();
-            int lastTrailChunkX = Integer.MIN_VALUE;
-            int lastTrailChunkZ = Integer.MIN_VALUE;
-            int lastLeadChunkX = Integer.MIN_VALUE;
-            int lastLeadChunkZ = Integer.MIN_VALUE;
-            int loadingTarget = Settings.IMP.QUEUE.PRELOAD_CHUNKS;
+            try {
+                Iterator<? extends BlockVector3> trailingIterator = iterable.iterator();
+                Iterator<? extends BlockVector3> leadingIterator = iterable.iterator();
+                int lastTrailChunkX = Integer.MIN_VALUE;
+                int lastTrailChunkZ = Integer.MIN_VALUE;
+                int lastLeadChunkX = Integer.MIN_VALUE;
+                int lastLeadChunkZ = Integer.MIN_VALUE;
+                int loadingTarget = Settings.IMP.QUEUE.PRELOAD_CHUNKS;
                 while (trailingIterator.hasNext()) {
                     BlockVector3 pt = trailingIterator.next();
                     this.apply(pt);
@@ -110,7 +111,7 @@ public class RegionVisitor implements Operation {
                         } else {
                             amount = 1;
                         }
-                        for (int count = 0; count < amount;) {
+                        for (int count = 0; count < amount; ) {
                             BlockVector3 v = leadingIterator.next();
                             int vcx = v.getBlockX() >> 4;
                             int vcz = v.getBlockZ() >> 4;
@@ -133,6 +134,7 @@ public class RegionVisitor implements Operation {
                 while (trailingIterator.hasNext()) {
                     apply(trailingIterator.next());
                 }
+            } catch (NoSuchElementException ignore) {}
         } else {
             for (BlockVector3 pt : iterable) {
                 apply(pt);
