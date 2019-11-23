@@ -1,5 +1,5 @@
 ---
-name: Bug / Issue report for FastAsyncWorldEdit v1.13.2 and higher
+name: Bug / Issue report for FastAsyncWorldEdit v1.14.4
 about: Bug / Issue report about this plugin
 title: ''
 labels: Requires Testing
@@ -7,8 +7,9 @@ assignees: ''
 
 ---
 
-# Bug report for FastAsyncWorldEdit 1.13.2
-<!--- If you are using 1.13 or 1.13.1 consider updating to 1.13.2 before raising an issue -->
+# Bug report for FastAsyncWorldEdit 1.14.4
+<!--- If you are using 1.13 or 1.13.1 consider updating to 1.14.4 before raising an issue -->
+<!--- The priority lays on 1.14 right now, so issues reported for 1.13 will be fixed for the 1.14 versions -->
 <!--- In order to create a valid issue report you have to follow this template. -->
 <!--- Remove this template if making a suggestion or asking a question. -->
 <!--- Incomplete reports might be marked as invalid. -->
