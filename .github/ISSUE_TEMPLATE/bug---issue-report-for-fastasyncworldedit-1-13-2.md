@@ -36,5 +36,5 @@ assignees: ''
 <!--- Make sure you've completed the following steps (put an "X" between of brackets): -->
 - [] I included all information required in the sections above
 - [] I made sure there are no duplicates of this report [(Use Search)](https://github.com/IntellectualSites/FastAsyncWorldEdit-1.13/issues?utf8=%E2%9C%93&q=is%3Aissue)
-- [] I made sure I am using an up-to-date version of [FastAsyncWorldEdit for 1.13.2](https://ci.athion.net/job/FastAsyncWorldEdit-Breaking/)
+- [] I made sure I am using an up-to-date version of [FastAsyncWorldEdit for 1.14.4](https://ci.athion.net/job/FastAsyncWorldEdit-pipeline/)
 - [] I made sure the bug/error is not caused by any other plugin
