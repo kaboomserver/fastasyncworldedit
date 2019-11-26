@@ -293,7 +293,7 @@ public class Settings extends Config {
                 " - Low values may result in FAWE waiting on requests to the main thread",
                 " - Higher values use more memory and isn't noticeably faster",
         })
-        public int PRELOAD_CHUNKS = 32;
+        public int PRELOAD_CHUNKS = 1;
 
         @Comment({
                 "Discard edits which have been idle for a certain amount of time (ms)",
