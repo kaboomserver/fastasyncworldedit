@@ -13,21 +13,21 @@ import com.github.intellectualsites.plotsquared.plot.config.Settings;
 import com.github.intellectualsites.plotsquared.plot.database.DBFunc;
 import com.github.intellectualsites.plotsquared.plot.flag.Flags;
 import com.github.intellectualsites.plotsquared.plot.generator.HybridPlotManager;
-import com.github.intellectualsites.plotsquared.plot.listener.WEManager;
 import com.github.intellectualsites.plotsquared.plot.object.Plot;
 import com.github.intellectualsites.plotsquared.plot.object.PlotArea;
 import com.github.intellectualsites.plotsquared.plot.object.PlotPlayer;
+import com.github.intellectualsites.plotsquared.plot.object.RegionWrapper;
 import com.github.intellectualsites.plotsquared.plot.util.ChunkManager;
 import com.github.intellectualsites.plotsquared.plot.util.SchematicHandler;
 import com.github.intellectualsites.plotsquared.plot.util.UUIDHandler;
 import com.github.intellectualsites.plotsquared.plot.util.block.GlobalBlockQueue;
 import com.github.intellectualsites.plotsquared.plot.util.block.QueueProvider;
+import com.github.intellectualsites.plotsquared.plot.listener.WEManager;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.regions.CuboidRegion;
 import com.sk89q.worldedit.regions.Region;
-import java.util.Set;
+import java.util.HashSet;
 import java.util.UUID;
-import org.jetbrains.annotations.NotNull;
 
 public class PlotSquaredFeature extends FaweMaskManager {
     public PlotSquaredFeature() {
@@ -100,7 +100,7 @@ public class PlotSquaredFeature extends FaweMaskManager {
     @Override
     public FaweMask getMask(FawePlayer fp, MaskType type) {
         final PlotPlayer pp = PlotPlayer.wrap(fp.parent);
-        final @NotNull Set<CuboidRegion> regions;
+        final HashSet<RegionWrapper> regions;
         Plot plot = pp.getCurrentPlot();
         if (isAllowed(fp, plot, type)) {
             regions = plot.getRegions();
@@ -108,8 +108,8 @@ public class PlotSquaredFeature extends FaweMaskManager {
             plot = null;
             regions = WEManager.getMask(pp);
             if (regions.size() == 1) {
-                CuboidRegion region = regions.iterator().next();
-                if (region.getMinimumPoint().getX() == Integer.MIN_VALUE && region.getMaximumPoint().getX() == Integer.MAX_VALUE) {
+                RegionWrapper region = regions.iterator().next();
+                if (region.minX == Integer.MIN_VALUE && region.maxX == Integer.MAX_VALUE) {
                     regions.clear();
                 }
             }
@@ -120,9 +120,13 @@ public class PlotSquaredFeature extends FaweMaskManager {
         PlotArea area = pp.getApplicablePlotArea();
         int min = area != null ? area.MIN_BUILD_HEIGHT : 0;
         int max = area != null ? Math.min(255, area.MAX_BUILD_HEIGHT) : 255;
-        final CuboidRegion region = regions.iterator().next();
-        final BlockVector3 pos1 = region.getMinimumPoint();
-        final BlockVector3 pos2 = region.getMaximumPoint();
+        final HashSet<com.boydti.fawe.object.RegionWrapper> faweRegions = new HashSet<>();
+        for (final RegionWrapper current : regions) {
+            faweRegions.add(new com.boydti.fawe.object.RegionWrapper(current.minX, current.maxX, min, max, current.minZ, current.maxZ));
+        }
+        final RegionWrapper region = regions.iterator().next();
+        final BlockVector3 pos1 = BlockVector3.at(region.minX, min, region.minZ);
+        final BlockVector3 pos2 = BlockVector3.at(region.maxX, max, region.maxZ);
         final Plot finalPlot = plot;
         if (Settings.Done.RESTRICT_BUILDING && Flags.DONE.isSet(finalPlot) || regions.isEmpty()) {
             return null;
