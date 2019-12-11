@@ -1,32 +1,47 @@
 package com.boydti.fawe;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import com.boydti.fawe.config.BBC;
 import com.boydti.fawe.config.Commands;
 import com.boydti.fawe.config.Settings;
 import com.boydti.fawe.object.FawePlayer;
 import com.boydti.fawe.object.brush.visualization.VisualQueue;
-import com.boydti.fawe.regions.general.plot.PlotSquaredFeature;
-import com.boydti.fawe.util.*;
+import com.boydti.fawe.util.CachedTextureUtil;
+import com.boydti.fawe.util.CleanTextureUtil;
+import com.boydti.fawe.util.FaweTimer;
+import com.boydti.fawe.util.MainUtil;
+import com.boydti.fawe.util.MemUtil;
+import com.boydti.fawe.util.RandomTextureUtil;
+import com.boydti.fawe.util.TaskManager;
+import com.boydti.fawe.util.TextureUtil;
+import com.boydti.fawe.util.WEManager;
 import com.boydti.fawe.util.chat.ChatManager;
 import com.boydti.fawe.util.chat.PlainChatManager;
 import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.extension.factory.DefaultTransformParser;
 import com.sk89q.worldedit.extension.platform.Actor;
 import com.sk89q.worldedit.session.request.Request;
-
-import javax.annotation.Nullable;
-import javax.management.InstanceAlreadyExistsException;
-import javax.management.NotificationEmitter;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryMXBean;
 import java.lang.management.MemoryPoolMXBean;
 import java.lang.management.MemoryUsage;
-import java.util.*;
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
-
-import static com.google.common.base.Preconditions.checkNotNull;
+import javax.annotation.Nullable;
+import javax.management.InstanceAlreadyExistsException;
+import javax.management.NotificationEmitter;
 
 /**
  * [ WorldEdit action]
@@ -172,8 +187,8 @@ public class Fawe {
                 transformParser = new DefaultTransformParser(getWorldEdit());
                 visualQueue = new VisualQueue(3);
                 WEManager.IMP.managers.addAll(Fawe.this.IMP.getMaskManagers());
-                WEManager.IMP.managers.add(new PlotSquaredFeature());
-                Fawe.debug("Plugin 'PlotSquared' found. Using it now.");
+                //WEManager.IMP.managers.add(new PlotSquaredFeature());
+                //Fawe.debug("Plugin 'PlotSquared' found. Using it now.");
             } catch (Throwable ignored) {}
         }, 0);
 
