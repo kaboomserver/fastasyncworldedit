@@ -1,5 +1,7 @@
 package com.boydti.fawe.command;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import com.boydti.fawe.FaweAPI;
 import com.boydti.fawe.config.BBC;
 import com.boydti.fawe.jnbt.anvil.MCAClipboard;
@@ -7,7 +9,15 @@ import com.boydti.fawe.jnbt.anvil.MCAFile;
 import com.boydti.fawe.jnbt.anvil.MCAFilter;
 import com.boydti.fawe.jnbt.anvil.MCAFilterCounter;
 import com.boydti.fawe.jnbt.anvil.MCAQueue;
-import com.boydti.fawe.jnbt.anvil.filters.*;
+import com.boydti.fawe.jnbt.anvil.filters.DebugFixP2Roads;
+import com.boydti.fawe.jnbt.anvil.filters.DeleteBiomeFilterSimple;
+import com.boydti.fawe.jnbt.anvil.filters.DeleteOldFilter;
+import com.boydti.fawe.jnbt.anvil.filters.DeleteUnclaimedFilter;
+import com.boydti.fawe.jnbt.anvil.filters.DeleteUninhabitedFilter;
+import com.boydti.fawe.jnbt.anvil.filters.RemapFilter;
+import com.boydti.fawe.jnbt.anvil.filters.RemoveLayerFilter;
+import com.boydti.fawe.jnbt.anvil.filters.SetPatternFilter;
+import com.boydti.fawe.jnbt.anvil.filters.TrimAirFilter;
 import com.boydti.fawe.jnbt.anvil.history.IAnvilHistory;
 import com.boydti.fawe.jnbt.anvil.history.NullAnvilHistory;
 import com.boydti.fawe.object.FawePlayer;
@@ -18,8 +28,6 @@ import com.boydti.fawe.object.changeset.AnvilHistory;
 import com.boydti.fawe.object.clipboard.remap.ClipboardRemapper;
 import com.boydti.fawe.util.MainUtil;
 import com.boydti.fawe.util.SetQueue;
-
-import static com.google.common.base.Preconditions.checkNotNull;
 import com.sk89q.minecraft.util.commands.Command;
 import com.sk89q.minecraft.util.commands.CommandPermissions;
 import com.sk89q.worldedit.EditSession;
@@ -36,7 +44,6 @@ import com.sk89q.worldedit.util.command.binding.Switch;
 import com.sk89q.worldedit.util.command.parametric.Optional;
 import com.sk89q.worldedit.world.World;
 import com.sk89q.worldedit.world.biome.BiomeType;
-
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.function.Consumer;
@@ -282,16 +289,16 @@ public class AnvilCommands {
     )
     @CommandPermissions("worldedit.anvil.trimallplots")
     public void trimAllPlots(Player player, @Switch('v') boolean deleteUnvisited) throws WorldEditException {
-        String folder = player.getWorld().getName();
-        int visitTime = deleteUnvisited ? 1 : -1;
-        PlotTrimFilter filter = new PlotTrimFilter(player.getWorld(), 0, visitTime, 600000);
-//        PlotTrimFilter result = runWithWorld(player, folder, filter, true);
-        FaweQueue defaultQueue = SetQueue.IMP.getNewQueue(folder, true, false);
-        MCAQueue queue = new MCAQueue(defaultQueue);
-        PlotTrimFilter result = queue.filterWorld(filter);
-        if (result != null) {
-            player.print(BBC.VISITOR_BLOCK.format(result.getTotal()));
-        }
+//        String folder = player.getWorld().getName();
+//        int visitTime = deleteUnvisited ? 1 : -1;
+//        PlotTrimFilter filter = new PlotTrimFilter(player.getWorld(), 0, visitTime, 600000);
+////        PlotTrimFilter result = runWithWorld(player, folder, filter, true);
+//        FaweQueue defaultQueue = SetQueue.IMP.getNewQueue(folder, true, false);
+//        MCAQueue queue = new MCAQueue(defaultQueue);
+//        PlotTrimFilter result = queue.filterWorld(filter);
+//        if (result != null) {
+//            player.print(BBC.VISITOR_BLOCK.format(result.getTotal()));
+//        }
     }
 
     @Command(

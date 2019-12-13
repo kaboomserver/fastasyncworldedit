@@ -4,30 +4,20 @@ import com.boydti.fawe.FaweAPI;
 import com.boydti.fawe.FaweCache;
 import com.boydti.fawe.object.FaweQueue;
 import com.boydti.fawe.util.SetQueue;
-import com.github.intellectualsites.plotsquared.plot.object.PlotBlock;
-import com.github.intellectualsites.plotsquared.plot.util.StringMan;
 import com.github.intellectualsites.plotsquared.plot.util.block.LocalBlockQueue;
 import com.sk89q.jnbt.CompoundTag;
-import com.sk89q.worldedit.WorldEdit;
-import com.sk89q.worldedit.extension.platform.Capability;
 import com.sk89q.worldedit.world.biome.BiomeType;
-import com.sk89q.worldedit.world.biome.BiomeTypes;
-import com.sk89q.worldedit.world.biome.Biomes;
 import com.sk89q.worldedit.world.block.BaseBlock;
-import com.sk89q.worldedit.world.registry.BiomeRegistry;
-import com.sk89q.worldedit.world.registry.LegacyMapper;
-import java.util.Collection;
+import com.sk89q.worldedit.world.block.BlockState;
 
 // TODO FIXME
 public class FaweLocalBlockQueue extends LocalBlockQueue {
 
     public final FaweQueue IMP;
-    private final LegacyMapper legacyMapper;
 
     public FaweLocalBlockQueue(String world) {
         super(world);
         IMP = SetQueue.IMP.getNewQueue(FaweAPI.getWorld(world), true, false);
-        legacyMapper = LegacyMapper.getInstance();
     }
 
     @Override
@@ -66,8 +56,8 @@ public class FaweLocalBlockQueue extends LocalBlockQueue {
     }
 
     @Override
-    public boolean setBlock(final int x, final int y, final int z, final PlotBlock id) {
-    	return setBlock(x, y, z, legacyMapper.getBaseBlockFromPlotBlock(id));
+    public boolean setBlock(final int x, final int y, final int z, final BlockState id) {
+    	return IMP.setBlock(x, y, z, id);
     }
 
     @Override
@@ -76,27 +66,14 @@ public class FaweLocalBlockQueue extends LocalBlockQueue {
     }
 
     @Override
-    public PlotBlock getBlock(int x, int y, int z) {
+    public BlockState getBlock(int x, int y, int z) {
         int combined = IMP.getCombinedId4Data(x, y, z);
-        com.sk89q.worldedit.world.block.BlockState state = com.sk89q.worldedit.world.block.BlockState.getFromInternalId(combined);
-        return PlotBlock.get(state.getInternalBlockTypeId(), state.getInternalPropertiesId());
+        return BlockState.getFromInternalId(combined);
     }
 
-    private BiomeType biome;
-    private String lastBiome;
-    private BiomeRegistry reg;
-
     @Override
-    public boolean setBiome(int x, int z, String biome) {
-        if (!StringMan.isEqual(biome, lastBiome)) {
-            if (reg == null) {
-                reg = WorldEdit.getInstance().getPlatformManager().queryCapability(Capability.USER_COMMANDS).getRegistries().getBiomeRegistry();
-            }
-            Collection<BiomeType> biomes = BiomeTypes.values();
-            lastBiome = biome;
-            this.biome = Biomes.findBiomeByName(biomes, biome, reg);
-        }
-        return IMP.setBiome(x, z, this.biome);
+    public boolean setBiome(int x, int z, BiomeType biomeType) {
+        return IMP.setBiome(x, 0, z, biomeType);
     }
 
     @Override

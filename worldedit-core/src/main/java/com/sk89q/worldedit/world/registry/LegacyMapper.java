@@ -19,9 +19,6 @@
 
 package com.sk89q.worldedit.world.registry;
 
-import com.github.intellectualsites.plotsquared.plot.object.LegacyPlotBlock;
-import com.github.intellectualsites.plotsquared.plot.object.PlotBlock;
-import com.github.intellectualsites.plotsquared.plot.object.StringPlotBlock;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import com.google.common.io.Resources;
@@ -32,22 +29,19 @@ import com.sk89q.worldedit.extension.input.ParserContext;
 import com.sk89q.worldedit.math.Vector3;
 import com.sk89q.worldedit.registry.state.PropertyKey;
 import com.sk89q.worldedit.util.gson.VectorAdapter;
-import com.sk89q.worldedit.world.block.BaseBlock;
 import com.sk89q.worldedit.world.block.BlockState;
 import com.sk89q.worldedit.world.block.BlockStateHolder;
 import com.sk89q.worldedit.world.block.BlockType;
-import com.sk89q.worldedit.world.block.BlockTypes;
 import com.sk89q.worldedit.world.item.ItemType;
 import com.sk89q.worldedit.world.item.ItemTypes;
 import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.annotation.Nullable;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.Map;
+import javax.annotation.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class LegacyMapper {
 
@@ -93,7 +87,7 @@ public class LegacyMapper {
 
         for (Map.Entry<String, String> blockEntry : dataFile.blocks.entrySet()) {
             try {
-                BlockStateHolder blockState = BlockState.get(null, blockEntry.getValue());
+                BlockState blockState = BlockState.get(null, blockEntry.getValue());
                 BlockType type = blockState.getBlockType();
                 if (type.hasProperty(PropertyKey.WATERLOGGED)) {
                     blockState = blockState.with(PropertyKey.WATERLOGGED, false);
@@ -223,29 +217,6 @@ public class LegacyMapper {
     public int[] getLegacyFromBlock(BlockState blockState) {
         Integer combinedId = getLegacyCombined(blockState);
         return combinedId == null ? null : new int[] { combinedId >> 4, combinedId & 0xF };
-    }
-
-    public BaseBlock getBaseBlockFromPlotBlock(PlotBlock plotBlock) {
-    	if(plotBlock instanceof StringPlotBlock) {
-    		try {
-    			return BlockTypes.get(plotBlock.toString()).getDefaultState().toBaseBlock();
-    		}catch(Throwable failed) {
-    			log.error("Unable to convert StringPlotBlock " + plotBlock + " to BaseBlock!");
-    			failed.printStackTrace();
-    			return null;
-    		}
-    	}else if(plotBlock instanceof LegacyPlotBlock) {
-    		try {
-    			return BaseBlock.getState(((LegacyPlotBlock)plotBlock).getId(), ((LegacyPlotBlock)plotBlock).getData()).toBaseBlock();
-    		}catch(Throwable failed) {
-    			log.error("Unable to convert LegacyPlotBlock " + plotBlock + " to BaseBlock!");
-    			failed.printStackTrace();
-    			return null;
-    		}
-    	}else {
-			log.error("Unable to convert LegacyPlotBlock " + plotBlock + " to BaseBlock!");
-			return null;
-    	}
     }
 
     public static LegacyMapper getInstance() {

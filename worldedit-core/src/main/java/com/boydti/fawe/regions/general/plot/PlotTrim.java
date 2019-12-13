@@ -1,5 +1,7 @@
 package com.boydti.fawe.regions.general.plot;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import com.boydti.fawe.jnbt.anvil.MCAChunk;
 import com.boydti.fawe.jnbt.anvil.MCAFile;
 import com.boydti.fawe.jnbt.anvil.MCAFilter;
@@ -8,17 +10,14 @@ import com.boydti.fawe.object.FaweQueue;
 import com.boydti.fawe.util.MainUtil;
 import com.boydti.fawe.util.MathMan;
 import com.boydti.fawe.util.SetQueue;
-
 import com.github.intellectualsites.plotsquared.plot.PlotSquared;
-import com.github.intellectualsites.plotsquared.plot.object.ChunkLoc;
 import com.github.intellectualsites.plotsquared.plot.object.Location;
 import com.github.intellectualsites.plotsquared.plot.object.Plot;
 import com.github.intellectualsites.plotsquared.plot.object.PlotArea;
 import com.github.intellectualsites.plotsquared.plot.object.PlotPlayer;
 import com.github.intellectualsites.plotsquared.plot.util.expiry.ExpireManager;
-import static com.google.common.base.Preconditions.checkNotNull;
+import com.sk89q.worldedit.math.BlockVector2;
 import com.sk89q.worldedit.world.block.BlockTypes;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -76,12 +75,12 @@ public class PlotTrim {
     }
 
     public void run() {
-        final Set<ChunkLoc> mcas = new HashSet<>();
+        final Set<BlockVector2> mcas = new HashSet<>();
         if (deleteUnowned && area != null) {
             originalQueue.filterWorld(new MCAFilter() {
                 @Override
                 public boolean appliesFile(int mcaX, int mcaZ) {
-                    mcas.add(new ChunkLoc(mcaX, mcaZ));
+                    mcas.add(BlockVector2.at(mcaX, mcaZ));
                     return false;
                 }
             });
@@ -98,14 +97,14 @@ public class PlotTrim {
                 int ccz2 = pos2.getZ() >> 9;
                 for (int x = ccx1; x <= ccx2; x++) {
                     for (int z = ccz1; z <= ccz2; z++) {
-                        ChunkLoc loc = new ChunkLoc(x, z);
+                        BlockVector2 loc = BlockVector2.at(x, z);
                         mcas.remove(loc);
                     }
                 }
             }
-            for (ChunkLoc mca : mcas) {
-                int bx = mca.x << 5;
-                int bz = mca.z << 5;
+            for (BlockVector2 mca : mcas) {
+                int bx = mca.getX() << 5;
+                int bz = mca.getZ() << 5;
                 for (int x = 0; x < 32; x++) {
                     for (int z = 0; z < 32; z++) {
                         long pair = MathMan.pairInt(bx + x, bz + z);
@@ -120,7 +119,7 @@ public class PlotTrim {
         originalQueue.filterWorld(new MCAFilter() {
             @Override
             public boolean appliesFile(int mcaX, int mcaZ) {
-                ChunkLoc loc = new ChunkLoc(mcaX, mcaZ);
+                BlockVector2 loc = BlockVector2.at(mcaX, mcaZ);
                 return !mcas.contains(loc);
             }
 
@@ -128,7 +127,7 @@ public class PlotTrim {
             public MCAFile applyFile(MCAFile mca) {
                 int mcaX = mca.getX();
                 int mcaZ = mca.getZ();
-                ChunkLoc loc = new ChunkLoc(mcaX, mcaZ);
+                BlockVector2 loc = BlockVector2.at(mcaX, mcaZ);
                 if (mcas.contains(loc)) {
                     player.sendMessage("Delete MCA " + mca);
                     mca.setDeleted(true);

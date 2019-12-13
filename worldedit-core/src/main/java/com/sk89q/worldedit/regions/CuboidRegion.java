@@ -19,6 +19,9 @@
 
 package com.sk89q.worldedit.regions;
 
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import com.boydti.fawe.config.Settings;
 import com.boydti.fawe.object.collection.BlockVectorSet;
 import com.sk89q.worldedit.math.BlockVector2;
@@ -27,15 +30,11 @@ import com.sk89q.worldedit.math.MutableBlockVector2;
 import com.sk89q.worldedit.math.MutableBlockVector3;
 import com.sk89q.worldedit.world.World;
 import com.sk89q.worldedit.world.storage.ChunkStore;
-import org.jetbrains.annotations.NotNull;
-
 import java.util.AbstractSet;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Set;
-
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * An axis-aligned cuboid. It can be defined using two corners of the cuboid.
@@ -186,16 +185,6 @@ public class CuboidRegion extends AbstractRegion implements FlatRegion {
     @Override
     public BlockVector3 getMaximumPoint() {
         return pos1.getMaximum(pos2);
-    }
-
-    @Override
-    public int getMinimumY() {
-        return Math.min(pos1.getBlockY(), pos2.getBlockY());
-    }
-
-    @Override
-    public int getMaximumY() {
-        return Math.max(pos1.getBlockY(), pos2.getBlockY());
     }
 
     @Override
@@ -612,5 +601,29 @@ public class CuboidRegion extends AbstractRegion implements FlatRegion {
         return new CuboidRegion(origin.subtract(size), origin.add(size));
     }
 
+    @Override
+    public int getMinimumY() {
+        return minY;
+    }
 
+    @Override
+    public int getMaximumY() {
+        return maxY;
+    }
+
+    public int getMinimumX() {
+        return minX;
+    }
+
+    public int getMinimumZ() {
+        return minZ;
+    }
+
+    public int getMaximumX() {
+        return maxX;
+    }
+
+    public int getMaximumZ() {
+        return maxZ;
+    }
 }
