@@ -34,6 +34,7 @@ import com.sk89q.worldedit.world.registry.LegacyMapper;
 
 import javax.annotation.Nullable;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -867,9 +868,7 @@ public final class BlockTypes {
         try {
             Field field = BlockTypes.class.getDeclaredField(enumName);
             ReflectionUtils.setFailsafeFieldValue(field, null, existing);
-        } catch (NoSuchFieldException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
+        } catch (NoSuchFieldException | NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
             e.printStackTrace();
         }
 

@@ -255,7 +255,11 @@ public class BukkitChunk_1_13 extends IntFaweChunk<Chunk, BukkitQueue_1_13> {
         // TODO copy only if different
         Object defaultBlock = BukkitQueue_1_13.fieldDefaultBlock.get(current);
         if (defaultBlock != AIR) {
-            ReflectionUtils.setFailsafeFieldValue(BukkitQueue_1_13.fieldDefaultBlock, paletteBlock, BukkitQueue_1_13.fieldDefaultBlock.get(current));
+		    try {
+                ReflectionUtils.setFailsafeFieldValue(BukkitQueue_1_13.fieldDefaultBlock, paletteBlock, BukkitQueue_1_13.fieldDefaultBlock.get(current));
+            } catch (NoSuchMethodException e) {
+                e.printStackTrace();
+            }
         }
 
         return paletteBlock;
